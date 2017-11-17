@@ -1,0 +1,6 @@
+<form (submit)='submitQuestion()'>
+  Question: <input type='text' name='question' required minlength='10' [(ngModel)]='obj.question' #question="ngModel">
+  <div *ngIf='!question.valid'>Must be at least 10 letters</div>
+  Description: <input type='text' name='description' [(ngModel)]='obj.description'>
+  <input type='submit' value='submit' *ngIf='question.valid'>
+</form>

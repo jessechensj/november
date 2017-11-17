@@ -1,0 +1,8 @@
+<h1>{{question|json}}</h1>
+
+<form (submit)='submitAnswer()'>
+  Your answer: <input type='text' name='answer' required minlength='5' [(ngModel)]='obj.answer' #answer="ngModel">
+  <div *ngIf='!answer.valid'>Must be at least 5 letters</div>
+  Supporting details (optional): <input type='text' name='details' [(ngModel)]='obj.details'>
+  <input type='submit' value='submit' *ngIf='answer.valid'>
+</form>

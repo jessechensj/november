@@ -1,0 +1,16 @@
+welcome {{name}}!
+<a [routerLink]="['new_question']">new question</a>
+
+<table>
+  <tr>
+    <th>Question</th>
+    <th>Answers</th>
+    <th>Action</th>
+  </tr>
+  <tr *ngFor="let question of questions">
+    <td>{{ question.question}}</td>
+    <td>{{ question.answers}}</td>
+    <td><a [routerLink]="['question', question._id]" >Show</a>
+    <a [routerLink]="['question', question._id, 'new_answer']" >Answer</a></td>
+  </tr>
+</table>
