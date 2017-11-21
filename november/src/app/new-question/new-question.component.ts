@@ -29,4 +29,8 @@ export class NewQuestionComponent implements OnInit {
 			this._router.navigate(['/landing']);
     });
   }
+  
+  logout(){
+    this._serviceService.logout();
+  }
 }

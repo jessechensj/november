@@ -1,3 +1,5 @@
+<button (click)='logout()'>Logout</button>
+
 <form (submit)='submitQuestion()'>
   Question: <input type='text' name='question' required minlength='10' [(ngModel)]='obj.question' #question="ngModel">
   <div *ngIf='!question.valid'>Must be at least 10 letters</div>

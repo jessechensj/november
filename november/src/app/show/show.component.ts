@@ -11,20 +11,33 @@ import { Router } from '@angular/router';
 export class ShowComponent implements OnInit {
 
   question;
-  answers;
+  answers = {};
+  questionid;
 
   constructor(
     private _route: ActivatedRoute,
     private _serviceService: ServiceService,
     private _router : Router
   ) { 
+  }
+
+  ngOnInit() {
     this._route.paramMap.subscribe( params => {
+      this.questionid=params.get("id")
       this._serviceService.getOneQuestion(params.get('id'), (response) => {this.question = response});
       this._serviceService.getAnswers(params.get('id'), (response) => {this.answers = response});
     })
   }
 
-  ngOnInit() {
+  like(id){
+    this._serviceService.like(id, () => {
+      this._serviceService.getAnswers(this.questionid, (response) => {this.answers = response});
+    });
+    this.answers.answerstext.sort((a, b)=>b.likes-a.likes);
+		this._serviceService.update(this.answers, res=>{});
   }
 
+  logout(){
+    this._serviceService.logout();
+  }
 }

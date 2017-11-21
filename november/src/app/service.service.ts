@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http'; 
+import { Router } from '@angular/router';
 
 @Injectable()
 export class ServiceService {
@@ -7,7 +8,10 @@ export class ServiceService {
   name = '';
   questions = [];
   answers;
-  constructor(private _http: Http) { }
+  constructor(
+    private _http: Http,
+    private _router: Router
+  ) { }
 
   login(username) {
     this.name = username;
@@ -18,7 +22,6 @@ export class ServiceService {
   }
 
   saveQuestion(obj, callback){
-    console.log(obj, 'in saveQuestion()');
     this._http.post('/create', obj).subscribe( 
       (res)=>{
         callback(res.json());
@@ -32,7 +35,6 @@ export class ServiceService {
   }
 
   saveAnswer(obj, callback){
-    console.log(obj, 'in saveAnswer()');
     this._http.post('/create_answer', obj).subscribe( 
       (res)=>{
         callback(res.json());
@@ -64,5 +66,33 @@ export class ServiceService {
       (response) => { this.questions = response.json(); callback(response.json());},
       (error) => {console.log(error)}
     )
+  }
+
+  like(id, callback){
+    this._http.post('/like', {id: id}).subscribe( 
+      (res)=>{
+        console.log('done with like(): success')
+        callback()
+			},
+			(err)=>{
+				console.log(err);
+      }
+    )
+  }
+
+  update(obj, callback){
+		this._http.put('/update/'+obj._id, obj).subscribe(
+			(res)=>{
+        callback(res.json())
+      },
+			(err)=>{
+        callback(err.json())
+      }
+		)
+  }
+  
+  logout(){
+    this.name = ''
+    this._router.navigate(['/'])
   }
 }

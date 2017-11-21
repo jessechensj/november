@@ -23,4 +23,7 @@ export class LandingComponent implements OnInit {
     )
   }
 
+  logout(){
+    this._serviceService.logout();
+  }
 }

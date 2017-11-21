@@ -1,4 +1,16 @@
-question:
-<h1>{{question|json}}</h1>
+<button (click)='logout()'>Logout</button>
+
+<h1 *ngFor='let q of question'>{{q.question}} <br> {{q.description}}</h1>
 answers:
-<p>{{answers|json}}</p>
+
+<div *ngFor='let a of answers.answerstext'>
+        {{a.user}} said:<br>
+        <h1>{{a.answer}}</h1><br>
+        {{a.details}}<br>
+        Likes:{{a.likes}}
+        {{a._id}}
+        <form (submit)='like(a._id)'>
+            <input type='submit' value='Like'>
+        </form>
+</div>
+

@@ -22,6 +22,7 @@ var Question = mongoose.model('Question')
 
 var AnswerSchema = new mongoose.Schema({
     _question: {type: Schema.Types.ObjectId, ref: 'Question'},
+    user: {type: String, required: true},
     answer: { type: String, required: true, minlength: 5 },
     details: { type: String },
     likes: {type: Number}
@@ -64,27 +65,28 @@ app.post('/create', (req, res, next)=>{
 });
 
 app.post('/create_answer', (req, res, next)=>{
-    console.log('in create answer')
-    console.log(req.body)
-
-    var answer = new Answer(req.body);
-    
-    answer.save(function(err){
-        if(err){
-            console.log('something went wrong with creation');
-            res.json('landing')
-        }
-        else{
-            console.log('success');
-            res.json('landing')
-        }
+    Question.findOne({_id: req.body._question}, function(err, question){
+        var answer = new Answer(req.body);
+        question.answers += 1;
+        answer.save(function(err){
+            if(err){
+                console.log('something went wrong with creation');
+                res.json('landing')
+            }
+            else{
+                question.answerstext.push(answer);
+                question.save(function(err){
+                    console.log('saved successfully');
+                })
+                console.log('success');
+                res.json('landing')
+            }
+        })
     })
 });
 
 app.post('/', (req, res, next)=>{
     req.session.name = req.body.name;
-    console.log(req.session.name);
-    console.log('from login post req')
     res.json('landing');
 });
 
@@ -103,9 +105,14 @@ app.get('/questions', (req, res, next)=>{
 app.get('/question/:id', function (req, res){
     console.log('getting answers')
     Question.findOne({_id: req.params.id})
-    .populate('answers')
+    .populate('answerstext')
     .exec(function(err, answers) {
-        res.json(answers);
+        if(err){
+            res.json(err);
+        }
+        else{
+            res.json(answers);
+        }
     });
 });
 
@@ -122,6 +129,24 @@ app.get('/one_question/:id', (req, res, next)=>{
     });
 })
 
+app.post('/like', (req, res, next)=>{
+    console.log(req.body.id)
+    Answer.findOneAndUpdate({_id: req.body.id}, {$inc:{likes: 1}}, function(err, answer){
+        if (err){
+            console.log(err)
+        }
+        else{
+            console.log(answer)
+            res.json(answer)
+        }
+    })
+})
+
+app.put("/update/:id", (req, res, next)=>{
+	Question.findByIdAndUpdate(req.params.id, req.body, function(err, question){
+		res.json(question);
+	});
+});
 // app.all("*", (req,res,next) => {
 //     console.log(req.session.name);
 //     console.log('from redirect')
