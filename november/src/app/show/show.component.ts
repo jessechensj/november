@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 export class ShowComponent implements OnInit {
 
   question;
-  answers = {answerstext:''};
+  answers = {answerstext:[]};
   questionid;
 
   constructor(
